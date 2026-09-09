@@ -7,6 +7,11 @@ pipeline {
     }
 
     stages {
+        stage('Merhaba') {
+            steps {
+                echo "Bu stage Git'ten geldi, Jenkins arayuzune hic dokunmadim!"
+            }
+        }
         stage('Build Image') {
             steps {
                 echo "Docker image build ediliyor..."
