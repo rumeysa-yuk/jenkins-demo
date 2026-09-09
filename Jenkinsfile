@@ -7,6 +7,12 @@ pipeline {
     }
 
     stages {
+        stage('RUMO YENİ STAGE ') {
+            steps {
+                echo "bu bir test stagesidir"
+            }
+        }
+
         stage('Merhaba') {
             steps {
                 echo "Bu stage Git'ten geldi, Jenkins arayuzune hic dokunmadim!"
