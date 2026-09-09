@@ -1,0 +1,24 @@
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    image: my-jenkins:lts
+    container_name: jenkins
+    restart: unless-stopped
+    user: root                          # docker.sock erişimini kolaylaştırmak için (aşağıda not var)
+    ports:
+      - "8099:8080"                     # Web arayüzü
+      - "50000:50000"                   # Agent bağlantı portu
+    volumes:
+      - jenkins_home:/var/jenkins_home  # Tüm Jenkins verisi burada kalıcı olur
+      - /var/run/docker.sock:/var/run/docker.sock  # Host Docker'ına erişim
+    networks:
+      - jenkins
+
+volumes:
+  jenkins_home:
+    name: jenkins_home1
+networks:
+  jenkins:
+    name: jenkins
