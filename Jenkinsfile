@@ -7,7 +7,7 @@ pipeline {
     }
 
     stages {
-        stage('RUMO YENİ STAGE ') {
+        stage('RUMO YENİ STAGE FEATURE ') {
             steps {
                 echo "bu bir test stagesidir"
             }
