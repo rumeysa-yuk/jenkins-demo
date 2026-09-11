@@ -1,0 +1,5 @@
+# localhost'a deploy.
+# Ansible SSH ile başka sunucuya gitmek yerine, çalıştığı makinenin kendisine bağlanır (connection: local).
+
+[target]
+localhost ansible_connection=local

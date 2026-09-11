@@ -1,0 +1,46 @@
+---
+# Bu playbook, Jenkins'in build ettiği image'i alip hedef makinede
+# KALICI bir container olarak ayaga kaldirir.
+#
+# Jenkins bu playbook'u soyle cagiracak:
+#   ansible-playbook -i inventory.ini deploy.yml -e "image=... container_name=... host_port=..."
+#
+# -e ile disaridan degisken geciyoruz (extra vars). Boylece playbook
+# her build'de farkli image tag'i ile calisabiliyor.
+
+- name: Uygulamayi deploy et
+  hosts: target
+  gather_facts: false
+
+  vars:
+    # Varsayilan degerler; Jenkins bunlari -e ile ezecek.
+    image: "jenkins-demo-app:latest"
+    container_name: "jenkins-demo-prod"
+    host_port: "5002"
+    container_port: "5000"
+
+  tasks:
+    - name: Eski container'i kaldir (varsa)
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: absent
+        # force_kill: calisan container'i beklemeden durdurur
+        force_kill: true
+
+    - name: Yeni container'i ayaga kaldir
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image }}"
+        state: started
+        restart_policy: unless-stopped
+        ports:
+          - "{{ host_port }}:{{ container_port }}"
+
+    - name: Container'in ayakta oldugunu dogrula
+      community.docker.docker_container_info:
+        name: "{{ container_name }}"
+      register: info
+
+    - name: Durumu ekrana yaz
+      ansible.builtin.debug:
+        msg: "Container '{{ container_name }}' durumu: {{ info.container.State.Status }}"
